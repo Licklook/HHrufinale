@@ -95,16 +95,25 @@
             messages.scrollTop = messages.scrollHeight;
         }
 
-        function appendAssistantMessage(content) {
-            const messages = document.getElementById("chat-messages");
-            messages.innerHTML += `
-                <div class="message-card assistant-message">
-                    ${content}
-                    <div class="time">${getCurrentTime()}</div>
-                </div>
-            `;
-            messages.scrollTop = messages.scrollHeight;
-        }
+        function appendAssistantMessage(content, isThinking = false) {
+    const messages = document.getElementById("chat-messages");
+    const avatarUrl = "Images/idle.gif"; // твоя гифка
+
+    const messageHTML = `
+        <div class="message-card assistant-message" ${isThinking ? 'id="thinking-message"' : ''}>
+            <div class="avatar">
+                <img src="${avatarUrl}" alt="avatar">
+            </div>
+            <div class="message-content">
+                ${isThinking ? '<span class="thinking-dots">Думаю...</span>' : content}
+                <div class="time">${getCurrentTime()}</div>
+            </div>
+        </div>
+    `;
+
+    messages.innerHTML += messageHTML;
+    messages.scrollTop = messages.scrollHeight;
+}
 
         /* === отображение сгенерированного изображения === */
         function appendAssistantImage(imageUrl, profession) {
@@ -252,8 +261,18 @@
                 const profession = wantToBeMatch[1].trim();
                 
                 // 1. Сначала получаем ответ от DeepSeek
-                const response = await getAIResponse();
-                appendAssistantMessage(response);
+                // Показываем "Думаю..."
+appendAssistantMessage("", true);
+
+// Делаем запрос
+const response = await getAIResponse();
+
+// Убираем "Думаю..."
+const thinkingMsg = document.getElementById("thinking-message");
+if (thinkingMsg) thinkingMsg.remove();
+
+// Показываем ответ
+appendAssistantMessage(response);
                 if (voiceEnabled) speakText(response);
                 history.push({ role: "assistant", content: response });
 

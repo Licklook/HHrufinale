@@ -119,10 +119,16 @@ body {
 
 /* MESSAGE CARDS */
 .message-card {
-    display: flex;
-    align-items: flex-start;
-    margin: 10px 0;
-    gap: 10px;
+  border-radius: 14px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  max-width: 70%;
+  word-wrap: break-word;
+  transition: transform 0.25s ease, opacity 0.5s ease,
+    background-color 0.8s ease, color 0.8s ease;
+  opacity: 0;
+  animation: fadeInMsg 0.5s forwards;
 }
 .message-card:hover {
   transform: scale(1.03);
@@ -138,43 +144,6 @@ body {
   background-color: #242f3d;
   color: #fff;
   border-radius: 18px 18px 18px 0;
-}
-.avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    flex-shrink: 0;
-}
-.avatar {
-    width: 128px; /* было 40px */
-    height: auto;
-    /*border-radius: 50%;*/
-    overflow: hidden;
-    flex-shrink: 0;
-    /*border: 2px solid #ff4d4d; /* красная обводка */
-    /*box-shadow: 0 0 8px rgba(255, 77, 77, 0.4); /* лёгкое свечение */
-}
-
-.avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* "Думаю..." анимация */
-.thinking-dots {
-    display: inline-block;
-    color: #ccc;
-    font-size: 14px;
-    letter-spacing: 2px;
-    animation: blink 1.2s infinite;
-}
-
-@keyframes blink {
-    0%, 20% { opacity: 0; }
-    50% { opacity: 1; }
-    100% { opacity: 0; }
 }
 .time {
   font-size: 12px;
