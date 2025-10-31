@@ -106,11 +106,14 @@
     
     // Проверяем, является ли сообщение шуткой
     const isJoke = isBotJoking(content);
+    const isFinal = isFinalMessage(content);
     
     if (isThinking) {
         avatarUrl = "Images/quest.gif";
+    } else if (isFinal) {
+        avatarUrl = "Images/done.gif"; // гифка для финального сообщения
     } else if (isJoke) {
-        avatarUrl = "Images/xd.gif"; // гифка для шуток
+        avatarUrl = "Images/xd.gif";
     }
     
     const cardStyle = isThinking ? 'style="display: flex; flex-direction: column; align-items: center;"' : '';
@@ -174,7 +177,7 @@ function isBotJoking(content) {
         /* === отображение сгенерированного аудио === */
         function appendAssistantAudio(audioUrl, profession) {
             const messages = document.getElementById("chat-messages");
-            const caption = `🎵 Такую музыку слушают инженеры: <strong>${profession}</strong>`;
+            const caption = `🎵 Сгенерированная музыка для профессии: <strong>${profession}</strong>`;
             messages.innerHTML += `
                 <div class="message-card assistant-message">
                     <div class="avatar">
@@ -369,7 +372,7 @@ function isBotJoking(content) {
                         // Сохраняем в историю информацию об изображении
                         history.push({
                             role: "assistant",
-                            content: `[Вот так выглядит вайб ${profession}]`
+                            content: `[Изображение сгенерировано для профессии: ${profession}]`
                         });
                     }
                 });
@@ -399,6 +402,25 @@ function isBotJoking(content) {
             appendAssistantMessage(response);
             history.push({ role: "assistant", content: response });
         }
+
+        /* === определение финального сообщения === */
+    function isFinalMessage(content) {
+    if (!content) return false;
+    
+    const finalIndicators = [
+        'Я хочу быть',
+        'определился с профессией',
+        'итог',
+        'заключение',
+        'выбор сделан',
+        'рекомендую'
+    ];
+    
+    const lowerContent = content.toLowerCase();
+    
+    // Проверяем, является ли это финальным сообщением
+    return finalIndicators.some(indicator => lowerContent.includes(indicator.toLowerCase()));
+}
         /* === озвучка === */
         function speakText(text) {
             const tempDiv = document.createElement('div');
