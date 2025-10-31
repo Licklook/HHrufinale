@@ -10,6 +10,7 @@ body {
   height: 100vh;
   overflow: hidden;
   transition: background-color 0.8s ease, color 0.8s ease;
+  font-size: 16px; /* Added base font size */
 }
 
 /* HEADER */
@@ -32,6 +33,26 @@ body {
 #chat-header.moved .name {
   transform: translateX(-40vw);
 }
+
+
+#initial-image {
+  width: 480px;               /* размер PNG */
+  height: auto;
+  cursor: pointer;
+  transition: transform 1.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+              opacity 1.2s ease;
+  border-radius: 20px;
+}
+
+#initial-image:hover {
+  transform: scale(1.1);
+}
+
+#initial-image.fly {
+  transform: scale(3.5);
+  opacity: 0;
+}
+
 
 /* MENU */
 #menu-container {
@@ -123,6 +144,9 @@ body {
     align-items: flex-start;
     margin: 10px 0;
     gap: 10px;
+    font-size: 18px; /* Increased font size for messages */
+    line-height: 1.5; /* Improved readability */
+    padding: 15px; /* Added padding for better spacing */
 }
 .message-card:hover {
   transform: scale(1.03);
@@ -131,7 +155,7 @@ body {
   align-self: flex-end;
   background-color: #ae36ac;
   color: #fff;
-  border-radius: 18px 18px 0 18px;
+  border-radius: 24px 24px 0 24px;
 }
 .assistant-message {
   align-self: flex-start;
@@ -258,7 +282,7 @@ body {
   transition: background-color 0.8s ease, color 0.8s ease, font-size 0.8s ease;
 }
 .accessibility-mode .message-card {
-  font-size: 20px;
+  font-size: 24px; /* Even larger in accessibility mode */
 }
 .accessibility-mode #chat-header {
   background-color: #000000;

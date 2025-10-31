@@ -30,9 +30,18 @@
             </button>
         </div>
     </main>
+
+
     <div id="initial-container">
-        <button id="initial-button" onclick="startChat()">Привет!</button>
+      <img
+        id="initial-image"
+        src="Images/hello.png"
+        alt="Начать чат"
+        onclick="startChat()"
+      />
     </div>
+
+
     <audio id="click-sound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_6d707f89b8.mp3" preload="auto" ></audio>
     <script>
         const apiKey = "sk-98305cd3514f454ebfeb1964dbd4ce85";
@@ -48,37 +57,30 @@
         ];
         /* === старт чата === */
         async function startChat() {
-            const initialButton = document.getElementById("initial-button");
-            const initialContainer = document.getElementById("initial-container");
-            const chatSection = document.getElementById("chat-section");
-            const header = document.getElementById("chat-header");
-            const sound = document.getElementById("click-sound");
-           
-            sound.currentTime = 0;
-            sound.play();
-           
-            initialButton.classList.add("fly");
-           
-            setTimeout(async () => {
-                initialContainer.classList.add("hidden");
-                chatSection.classList.add("visible");
-                document.getElementById("chat-input").classList.add("visible");
-                header.classList.add("moved");
-               
-                // Показываем "Думаю..."
-                appendAssistantMessage("", true);
-               
-                const response = await getAIResponse();
-               
-                // Убираем "Думаю..."
-                const thinkingMsg = document.getElementById("thinking-message");
-                if (thinkingMsg) thinkingMsg.remove();
-               
-                appendAssistantMessage(response);
-                if (voiceEnabled) speakText(response);
-                history.push({ role: "assistant", content: response });
-            }, 1400);
-        }
+    const initialGif = document.getElementById("initial-image");
+    const initialContainer = document.getElementById("initial-container");
+    const chatSection = document.getElementById("chat-section");
+    const header = document.getElementById("chat-header");
+    const sound = document.getElementById("click-sound");
+
+    sound.currentTime = 0;
+    sound.play();
+
+    initialGif.classList.add("fly");
+
+    setTimeout(async () => {
+      initialContainer.classList.add("hidden");
+      chatSection.classList.add("visible");
+      document.getElementById("chat-input").classList.add("visible");
+      header.classList.add("moved");
+
+      const response = await getAIResponse();
+      appendAssistantMessage(response);
+      if (voiceEnabled) speakText(response);
+      history.push({ role: "assistant", content: response });
+    }, 1400);
+}
+        
         /* === время === */
         function getCurrentTime() {
             const now = new Date();
