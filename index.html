@@ -30,6 +30,8 @@
             </button>
         </div>
     </main>
+
+
     <div id="initial-container">
       <img
         id="initial-image"
@@ -38,11 +40,13 @@
         onclick="startChat()"
       />
     </div>
+
+
     <audio id="click-sound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_6d707f89b8.mp3" preload="auto" ></audio>
     <script>
         const apiKey = "sk-98305cd3514f454ebfeb1964dbd4ce85";
         const imageApiUrl = "http://192.168.14.189:5000/generate"; // Ваш API для генерации изображений
-      
+       
         let voiceEnabled = false;
         let accessibilityEnabled = false;
         let history = [
@@ -58,20 +62,24 @@
     const chatSection = document.getElementById("chat-section");
     const header = document.getElementById("chat-header");
     const sound = document.getElementById("click-sound");
+
     sound.currentTime = 0;
     sound.play();
+
     initialGif.classList.add("fly");
+
     setTimeout(async () => {
       initialContainer.classList.add("hidden");
       chatSection.classList.add("visible");
       document.getElementById("chat-input").classList.add("visible");
       header.classList.add("moved");
+
       const response = await getAIResponse();
       appendAssistantMessage(response);
       history.push({ role: "assistant", content: response });
     }, 1400);
 }
-       
+        
         /* === время === */
         function getCurrentTime() {
             const now = new Date();
@@ -97,8 +105,6 @@
     let avatarUrl = "Images/idle.gif"; // твоя гифка
     if (isThinking) {
         avatarUrl = "Images/quest.gif";
-    } else if (content.includes("Я хочу быть")) {
-        avatarUrl = "Images/done.gif";
     }
     const cardStyle = isThinking ? 'style="display: flex; flex-direction: column; align-items: center;"' : '';
     const contentStyle = isThinking ? 'style="text-align: center; margin-top: 10px;"' : 'style="text-align: center;"';
@@ -173,7 +179,7 @@
         async function generateProfessionImage(profession) {
             try {
                 console.log(`🖼️ Generating image for profession: ${profession}`);
-              
+               
                 const response = await fetch(imageApiUrl, {
                     method: 'POST',
                     headers: {
@@ -195,10 +201,10 @@
                 // Получаем изображение как Blob
                 const imageBlob = await response.blob();
                 const imageUrl = URL.createObjectURL(imageBlob);
-              
+               
                 console.log('✅ Image generated successfully');
                 return imageUrl;
-              
+               
             } catch (error) {
                 console.error('❌ Error generating image:', error);
                 return null;
@@ -209,7 +215,7 @@
             const textPrompt = `Music which could be listened by ${profession}`;
             try {
                 console.log(`🎵 Generating music for profession: ${profession}`);
-              
+               
                 const response = await fetch('http://192.168.14.189:5200/generate/generate-music', {
                     method: 'POST',
                     headers: {
@@ -223,10 +229,10 @@
                 // Получаем аудио как Blob
                 const audioBlob = await response.blob();
                 const audioUrl = URL.createObjectURL(audioBlob);
-              
+               
                 console.log('✅ Music generated successfully');
                 return audioUrl;
-              
+               
             } catch (error) {
                 console.error('❌ Error generating music:', error);
                 return null;
@@ -237,20 +243,20 @@
             try {
                 const url = `https://api.hh.ru/vacancies?text=${encodeURIComponent(query)}&per_page=5`;
                 const response = await fetch(url);
-              
+               
                 if (!response.ok) throw new Error("Ошибка при запросе вакансий с hh.ru");
-              
+               
                 const data = await response.json();
-              
+               
                 if (!data.items || data.items.length === 0) {
                     return `<div style='color:white;background:black;padding:10px;'>
                                 На hh.ru не найдено вакансий по запросу <span style='color:red;'>${query}</span> 😔
                             </div>`;
                 }
-              
+               
                 let result = "<div style='color:white;background:black;padding:10px;'>";
                 result += `<h3>🔍 Вакансии по запросу: <span style='color:red;'>${query}</span></h3>`;
-              
+               
                 data.items.forEach((vacancy) => {
                     const name = vacancy.name || "Без названия";
                     const employer = vacancy.employer ? vacancy.employer.name : "Не указано";
@@ -259,7 +265,7 @@
                         ? `${vacancy.salary.from}–${vacancy.salary.to || ""} ${vacancy.salary.currency}`
                         : "З/п не указана";
                     const url = vacancy.alternate_url;
-                  
+                   
                     result += `
                         <div style="margin: 8px 0; border-bottom: 1px solid #555; padding-bottom: 8px;">
                             <strong style='color:red;'>${name}</strong><br>
@@ -270,10 +276,10 @@
                         </div>
                     `;
                 });
-              
+               
                 result += "</div>";
                 return result;
-              
+               
             } catch (error) {
                 console.error(error);
                 return "Ошибка при загрузке вакансий 😢";
@@ -295,10 +301,10 @@
                     }),
                 });
                 if (!response.ok) throw new Error("Ошибка запроса к DeepSeek API");
-              
+               
                 const data = await response.json();
                 return data.choices[0].message.content;
-              
+               
             } catch (error) {
                 console.error(error);
                 return "Извини, не удалось получить ответ от DeepSeek 😔";
@@ -308,9 +314,9 @@
         async function sendMessage() {
             const input = document.getElementById("query");
             const text = input.value.trim();
-          
+           
             if (!text) return;
-          
+           
             appendUserMessage(text);
             input.value = "";
             history.push({ role: "user", content: text });
@@ -318,7 +324,7 @@
             const wantToBeMatch = text.match(/я хочу быть\s+(.+)/i);
             if (wantToBeMatch) {
                 const profession = wantToBeMatch[1].trim();
-              
+               
                 // 1. Сначала получаем ответ от DeepSeek
                 // Показываем "Думаю..."
                 appendAssistantMessage("", true);
@@ -361,13 +367,13 @@
             // Обычный запрос к DeepSeek
             // Показываем "Думаю..."
             appendAssistantMessage("", true);
-          
+           
             const response = await getAIResponse();
-          
+           
             // Убираем "Думаю..."
             const thinkingMsg = document.getElementById("thinking-message");
             if (thinkingMsg) thinkingMsg.remove();
-          
+           
             appendAssistantMessage(response);
             history.push({ role: "assistant", content: response });
         }
@@ -385,15 +391,15 @@
         }
         /* === голосовой ввод === */
         const micButton = document.getElementById("mic-button");
-      
+       
         if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             const recognition = new SpeechRecognition();
-          
+           
             recognition.continuous = false;
             recognition.interimResults = true;
             recognition.lang = navigator.language || "auto";
-          
+           
             let finalTranscript = "";
             micButton.addEventListener("click", () => {
                 recognition.start();
@@ -404,13 +410,13 @@
             });
             recognition.onresult = (event) => {
                 let interimTranscript = "";
-              
+               
                 for (let i = event.resultIndex; i < event.results.length; ++i) {
                     const transcript = event.results[i][0].transcript;
                     if (event.results[i].isFinal) finalTranscript += transcript + " ";
                     else interimTranscript += transcript;
                 }
-              
+               
                 document.getElementById("query").value = finalTranscript + interimTranscript;
             };
             recognition.onend = () => {
@@ -423,7 +429,7 @@
                 micButton.classList.remove("recording");
                 micButton.textContent = "🎤";
             };
-          
+           
         } else {
             micButton.disabled = true;
             micButton.title = "Ваш браузер не поддерживает голосовой ввод";
@@ -431,7 +437,7 @@
         /* === меню === */
         const menuIcon = document.getElementById("menu-icon");
         const dropdownMenu = document.getElementById("dropdown-menu");
-      
+       
         menuIcon.addEventListener("click", () => {
             dropdownMenu.classList.toggle("hidden");
         });
