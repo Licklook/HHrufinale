@@ -100,12 +100,19 @@
             `;
             messages.scrollTop = messages.scrollHeight;
         }
-        function appendAssistantMessage(content, isThinking = false) {
+    function appendAssistantMessage(content, isThinking = false) {
     const messages = document.getElementById("chat-messages");
-    let avatarUrl = "Images/idle.gif"; // твоя гифка
+    let avatarUrl = "Images/idle.gif"; // обычная гифка по умолчанию
+    
+    // Проверяем, является ли сообщение шуткой
+    const isJoke = isBotJoking(content);
+    
     if (isThinking) {
         avatarUrl = "Images/quest.gif";
+    } else if (isJoke) {
+        avatarUrl = "Images/xd.gif"; // гифка для шуток
     }
+    
     const cardStyle = isThinking ? 'style="display: flex; flex-direction: column; align-items: center;"' : '';
     const contentStyle = isThinking ? 'style="text-align: center; margin-top: 10px;"' : 'style="text-align: center;"';
     const messageHTML = `
@@ -124,6 +131,21 @@
     if (!isThinking && voiceEnabled) {
         speakText(content);
     }
+}
+/* === определение шутки === */
+function isBotJoking(content) {
+    if (!content) return false;
+    
+    const jokeIndicators = [
+        'шутк', 'юмор', 'смех', 'ха-ха', 'хе-хе', '😄', '😂', '🤣', '😆',
+        'прикол', 'забавн', 'весел', 'улыбн', 'посмеяться', 'смешно',
+        'just kidding', 'lol', 'funny', 'haha'
+    ];
+    
+    const lowerContent = content.toLowerCase();
+    
+    // Проверяем наличие индикаторов шутки в тексте
+    return jokeIndicators.some(indicator => lowerContent.includes(indicator));
 }
         /* === отображение сгенерированного изображения === */
         function appendAssistantImage(imageUrl, profession) {
@@ -152,7 +174,7 @@
         /* === отображение сгенерированного аудио === */
         function appendAssistantAudio(audioUrl, profession) {
             const messages = document.getElementById("chat-messages");
-            const caption = `🎵 Сгенерированная музыка для профессии: <strong>${profession}</strong>`;
+            const caption = `🎵 Такую музыку слушают инженеры: <strong>${profession}</strong>`;
             messages.innerHTML += `
                 <div class="message-card assistant-message">
                     <div class="avatar">
@@ -347,7 +369,7 @@
                         // Сохраняем в историю информацию об изображении
                         history.push({
                             role: "assistant",
-                            content: `[Изображение сгенерировано для профессии: ${profession}]`
+                            content: `[Вот так выглядит вайб ${profession}]`
                         });
                     }
                 });
